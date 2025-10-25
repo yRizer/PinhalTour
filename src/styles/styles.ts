@@ -15,8 +15,17 @@ export const rootStyles = StyleSheet.create({
 
 export const rootTexts = StyleSheet.create({
     title: {
+        fontSize: 32,
+        fontWeight: 'bold',
+        color: rootColors.marrom,
+    },
+    subtitle: {
         fontSize: 24,
         fontWeight: 'bold',
+        color: rootColors.marrom,
+    },
+    text: {
+        fontSize: 16,
         color: rootColors.marrom,
     }
 })
