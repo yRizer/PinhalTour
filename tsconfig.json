@@ -5,6 +5,9 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "images/*": [
+        "./src/assets/images/*"
       ]
     }
   },
