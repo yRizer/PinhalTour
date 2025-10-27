@@ -6,15 +6,16 @@ import { styles } from "./styles";
 type ButtonProps = {
     text: string;
     textColor?: string;
+    backgroundColor?: string;
+    iconSize?: number;
     width?: DimensionValue;
     outLine?: { borderWidth: number, borderColor: string };
-    backgroundColor?: string;
     leftIcon?: keyof typeof Ionicons.glyphMap;
     rightIcon?: keyof typeof Ionicons.glyphMap;
     onPress?: () => void;
 }
 
-export default function Button({ text, width = '100%', outLine, backgroundColor, textColor, onPress, leftIcon, rightIcon }: ButtonProps) {
+export default function Button({ text, width = '100%', outLine, backgroundColor, textColor, onPress, leftIcon, rightIcon, iconSize = 30}: ButtonProps) {
     return (
         <Pressable
             style={[styles.buttonContainer,
@@ -29,8 +30,8 @@ export default function Button({ text, width = '100%', outLine, backgroundColor,
 
             <Text style={[styles.textButton, { color: textColor ? textColor : rootColors.branco }]}>{text}</Text>
 
-            {leftIcon && <Ionicons name={leftIcon} size={30} color={textColor ? textColor : rootColors.branco} style={{ position: 'absolute', left: 30 }} />}
-            {rightIcon && <Ionicons name={rightIcon} size={30} color={textColor ? textColor : rootColors.branco} style={{ position: 'absolute', right: 30 }} />}
+            {leftIcon && <Ionicons name={leftIcon} size={iconSize} color={textColor ? textColor : rootColors.branco} style={{ position: 'absolute', left: 30 }} />}
+            {rightIcon && <Ionicons name={rightIcon} size={iconSize} color={textColor ? textColor : rootColors.branco} style={{ position: 'absolute', right: 30 }} />}
             
         </Pressable>
     );
