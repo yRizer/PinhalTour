@@ -6,9 +6,12 @@
       "@/*": [
         "./*"
       ],
-      "images/*": [
+      "Images/*": [
         "./src/assets/images/*"
-      ]
+      ],
+      "Components/*": [
+        "./src/components/*"
+      ],
     }
   },
   "include": [
