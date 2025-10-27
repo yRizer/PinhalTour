@@ -21,11 +21,15 @@ type TabBarButtonProps = {
 function TabBarButton({ route, isFocused, onPress }: TabBarButtonProps) {
     const scale = useSharedValue(isFocused ? 1.2 : 1);
     const color = useSharedValue(isFocused ? '#6C63FF' : '#888');
+    const qrColor = useSharedValue(isFocused ? '#FFFFFF' : '#F9F9F9');
+    const qrViewScale = useSharedValue(isFocused ? 1.1 : 1);
 
     // Observa a mudança do `isFocused` e dispara a animação
     useEffect(() => {
         scale.value = withSpring(isFocused ? 1.2 : 1);
         color.value = withTiming(isFocused ? '#6C63FF' : '#888', { duration: 300 });
+        qrColor.value = withTiming(isFocused ? '#FFFFFF' : '#F9F9F9', { duration: 300 });
+        qrViewScale.value = withSpring(isFocused ? 1.1 : 1);
     }, [isFocused]);
 
     const animatedIconStyle = useAnimatedStyle(() => {
@@ -40,6 +44,19 @@ function TabBarButton({ route, isFocused, onPress }: TabBarButtonProps) {
         };
     });
 
+    const animatedQrTextStyle = useAnimatedStyle(() => {
+        return {
+            color: qrColor.value,
+        };
+    });
+
+    const animatedQrViewStyle = useAnimatedStyle(() => {
+        return {
+            transform: [{ scale: qrViewScale.value }],
+        };
+    });
+
+
     const getIconName = (routeName: string) => {
         if (routeName === 'home') return isFocused ? 'home' : 'home-outline';
         if (routeName === 'favoritos') return isFocused ? 'star' : 'star-outline';
@@ -48,6 +65,25 @@ function TabBarButton({ route, isFocused, onPress }: TabBarButtonProps) {
         if (routeName === 'eventos') return isFocused ? 'calendar-clear' : 'calendar-clear-outline';
         return 'help';
     };
+
+    if (route.name === 'qr code') {
+        return (
+            <Pressable onPress={onPress}>
+                <Animated.View style={[styles.qrTabButton, animatedQrViewStyle]}>
+                    <Animated.View style={animatedIconStyle}>
+                        <Ionicons
+                            name={getIconName(route.name)}
+                            size={24}
+                            color={isFocused ? '#FFFFFF' : '#F9F9F9'} // Você também pode animar a cor
+                        />
+                    </Animated.View>
+                    <Animated.Text style={[{ fontSize: 12 }, animatedQrTextStyle]}>
+                        {route.name === 'qr code' ? 'QR Code' : null}
+                    </Animated.Text>
+                </Animated.View>
+            </Pressable>
+        )
+    }
 
     return (
         <Pressable onPress={onPress} style={styles.tabButton}>
@@ -61,7 +97,6 @@ function TabBarButton({ route, isFocused, onPress }: TabBarButtonProps) {
             <Animated.Text style={[{ fontSize: 12 }, animatedTextStyle]}>
                 {route.name === 'home' ? 'Home' : null}
                 {route.name === 'favoritos' ? 'Favoritos' : null}
-                {route.name === 'qr code' ? 'QR Code' : null}
                 {route.name === 'mapa' ? 'Mapa' : null}
                 {route.name === 'eventos' ? 'Eventos' : null}
             </Animated.Text>

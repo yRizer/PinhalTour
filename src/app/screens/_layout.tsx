@@ -7,6 +7,7 @@ export default function TabsLayout() {
         <Tabs
             // Diga ao Expo Router para usar seu componente como a TabBar
             tabBar={(props) => <CustomTabBar {...props} />}
+
         >
             <Tabs.Screen name="home" options={{ title: 'Home' }} />
             <Tabs.Screen name="favoritos" options={{ title: 'Favoritos' }} />
