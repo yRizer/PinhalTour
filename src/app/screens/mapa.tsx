@@ -1,11 +1,12 @@
 // app/index.js (ou qualquer tela sua)
+import { rootStyles, rootTexts } from '@/src/styles/styles';
 import { useFocusEffect } from 'expo-router'; // ou '@react-navigation/native'
 import React, { useCallback } from 'react';
 import { View } from 'react-native';
 import Animated, {
-    useAnimatedStyle,
-    useSharedValue,
-    withTiming,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
 } from 'react-native-reanimated';
 
 export default function MapaScreen() {
@@ -34,8 +35,8 @@ export default function MapaScreen() {
   );
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Animated.Text style={[{ fontSize: 30 }, animatedStyle]}>
+    <View style={[rootStyles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+      <Animated.Text style={[rootTexts.title, animatedStyle]}>
         Mapa
       </Animated.Text>
     </View>
