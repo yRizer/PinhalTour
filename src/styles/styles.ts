@@ -11,6 +11,10 @@ export const rootColors = {
 
 
 export const rootStyles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: rootColors.background,
+    }
 })
 
 export const rootTexts = StyleSheet.create({
@@ -26,6 +30,10 @@ export const rootTexts = StyleSheet.create({
     },
     text: {
         fontSize: 16,
+        color: rootColors.marrom,
+    },
+    auxiliary: {
+        fontSize: 12,
         color: rootColors.marrom,
     }
 })
