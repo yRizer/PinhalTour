@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
         position: 'relative',
         flexDirection: 'row',
         height: 80,
-        backgroundColor: 'white',
+        backgroundColor: rootColors.branco,
         borderTopWidth: 1,
         borderTopColor: '#eee',
     },

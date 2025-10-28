@@ -1,4 +1,5 @@
 // components/CustomTabBar.js
+import { rootColors, rootTexts } from '@/src/styles/styles';
 import { Ionicons } from '@expo/vector-icons'; // Exemplo com ícones
 import React, { useEffect } from 'react';
 import { Pressable, View } from 'react-native';
@@ -20,14 +21,14 @@ type TabBarButtonProps = {
 // Componente de botão individual para facilitar
 function TabBarButton({ route, isFocused, onPress }: TabBarButtonProps) {
     const scale = useSharedValue(isFocused ? 1.2 : 1);
-    const color = useSharedValue(isFocused ? '#6C63FF' : '#888');
+    const color = useSharedValue(isFocused ? rootColors.vinho : rootColors.marrom);
     const qrColor = useSharedValue(isFocused ? '#FFFFFF' : '#F9F9F9');
     const qrViewScale = useSharedValue(isFocused ? 1.1 : 1);
 
     // Observa a mudança do `isFocused` e dispara a animação
     useEffect(() => {
         scale.value = withSpring(isFocused ? 1.2 : 1);
-        color.value = withTiming(isFocused ? '#6C63FF' : '#888', { duration: 300 });
+        color.value = withTiming(isFocused ? rootColors.vinho : rootColors.marrom, { duration: 300 });
         qrColor.value = withTiming(isFocused ? '#FFFFFF' : '#F9F9F9', { duration: 300 });
         qrViewScale.value = withSpring(isFocused ? 1.1 : 1);
     }, [isFocused]);
@@ -77,7 +78,7 @@ function TabBarButton({ route, isFocused, onPress }: TabBarButtonProps) {
                             color={isFocused ? '#FFFFFF' : '#F9F9F9'} // Você também pode animar a cor
                         />
                     </Animated.View>
-                    <Animated.Text style={[{ fontSize: 12 }, animatedQrTextStyle]}>
+                    <Animated.Text style={[rootTexts.auxiliary, animatedQrTextStyle]}>
                         {route.name === 'qr code' ? 'QR Code' : null}
                     </Animated.Text>
                 </Animated.View>
@@ -91,10 +92,10 @@ function TabBarButton({ route, isFocused, onPress }: TabBarButtonProps) {
                 <Ionicons
                     name={getIconName(route.name)}
                     size={24}
-                    color={isFocused ? '#6C63FF' : '#888'} // Você também pode animar a cor
+                    color={isFocused ? rootColors.vinho : rootColors.marrom} // Você também pode animar a cor
                 />
             </Animated.View>
-            <Animated.Text style={[{ fontSize: 12 }, animatedTextStyle]}>
+            <Animated.Text style={[rootTexts.auxiliary, animatedTextStyle]}>
                 {route.name === 'home' ? 'Home' : null}
                 {route.name === 'favoritos' ? 'Favoritos' : null}
                 {route.name === 'mapa' ? 'Mapa' : null}
