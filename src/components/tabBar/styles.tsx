@@ -7,8 +7,7 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         height: 80,
         backgroundColor: rootColors.branco,
-        borderTopWidth: 1,
-        borderTopColor: '#eee',
+        boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
     },
     tabButton: {
         flex: 1,
@@ -17,9 +16,9 @@ export const styles = StyleSheet.create({
     },
     qrTabButton: {
         top: -30,
-        width: 70,
-        height: 70,
-        borderRadius: 35,
+        width: 90,
+        height: 90,
+        borderRadius: 50,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: rootColors.vinho,
