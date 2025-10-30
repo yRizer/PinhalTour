@@ -6,7 +6,8 @@ export const rootColors = {
     background: "#F5EFE0",
     marrom: "#4A3F35",
     amarelo: "#F9A826",
-    branco: "#F9F6F0"
+    branco: "#F9F6F0",
+    verde: "#3E5944",
 }
 
 
@@ -14,6 +15,12 @@ export const rootStyles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: rootColors.background,
+    },
+    textInputStyle: {
+        backgroundColor: rootColors.branco,
+        color: rootColors.marrom,
+        fontSize: 16,
+        borderRadius: 12,
     }
 })
 
