@@ -12,7 +12,7 @@ export default function App() {
     }
 
     NavigationBar.setVisibilityAsync('hidden')
-    // NavigationBar.setBehaviorAsync('overlay-swipe')
+    NavigationBar.setBehaviorAsync('overlay-swipe')
 
     return (
         <View style={styles.mainContainer}>
