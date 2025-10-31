@@ -1,5 +1,6 @@
 // app/index.js (ou qualquer tela sua)
 import { SheetUp } from '@/src/components/bottomSheets';
+import { Button } from '@/src/components/buttons';
 import MainTextInput from '@/src/components/textInput';
 import { rootColors, rootStyles, rootTexts } from '@/src/styles/styles';
 import { Ionicons } from '@expo/vector-icons';
@@ -22,9 +23,21 @@ const dataCategories: { id: string; name: string; icon: keyof typeof Ionicons.gl
   { id: '5', name: 'Aventura', icon: 'bicycle-outline' },
 ];
 
+type MapPointData = {
+  id: string;
+  titulo: string;
+  endereco: string;
+  latitude: number;
+  longitude: number;
+  image: string;
+  distancia: number;
+  estrelas: number;
+};
+
 export default function MapaScreen() {
 
   const [selectedCategories, setSelectedCategories] = React.useState<string[]>([]);
+  const [bottomSheetData, setBottomSheetData] = React.useState<MapPointData | undefined>(undefined)
 
   // 1. Crie um valor compartilhado para a animação
   const opacity = useSharedValue(0);
@@ -57,7 +70,7 @@ export default function MapaScreen() {
     var color = useSharedValue(selectedCategories.includes(item.id) ? rootColors.branco : rootColors.marrom);
 
     var iconColor = useSharedValue(0)
-    
+
     useEffect(() => {
       backGroundColor.value = withTiming(selectedCategories.includes(item.id) ? rootColors.vinho : rootColors.branco, { duration: 100 });
       color.value = withTiming(selectedCategories.includes(item.id) ? rootColors.branco : rootColors.marrom, { duration: 100 });
@@ -109,6 +122,27 @@ export default function MapaScreen() {
     });
   }
 
+  function adicionarSheetData() {
+    if (!bottomSheetData) {
+      setBottomSheetData(
+        {
+          id: '1',
+          titulo: 'Igreja Matriz',
+          endereco: 'Praça da Independência - São Paulo, SP',
+          latitude: -46.74684587373476,
+          longitude: -22.193703351116405,
+          image: 'https://placehold.co/400/png',
+          distancia: 500,
+          estrelas: 4.5
+        }
+      );
+    }
+  }
+
+  function apagarSheetData() {
+    setBottomSheetData(undefined);
+  }
+
   return (
     <GestureHandlerRootView style={[rootStyles.container, { justifyContent: 'center', alignItems: 'center', backgroundColor: '#222222ff' }]}>
       <View style={styles.mapHeader}>
@@ -124,12 +158,18 @@ export default function MapaScreen() {
         Mapa
       </Animated.Text>
 
-      <SheetUp
-        SetPosY={75}
-        SheetHeight={1000}
-        Percentage={true}
-        description="Arraste para cima para ver mais opções"
-      />
+      <Button text='teste' width={'auto'} onPress={adicionarSheetData} />
+      <Button text='apagar' width={'auto'} onPress={apagarSheetData} />
+
+      {bottomSheetData &&
+        <SheetUp
+          SetPosY={75}
+          SheetHeight={1000}
+          Percentage={true}
+          description="Arraste para cima para ver mais opções"
+          mapsData={bottomSheetData}
+        />
+      }
     </GestureHandlerRootView>
   );
 }
