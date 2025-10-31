@@ -1,14 +1,16 @@
 // app/(tabs)/_layout.js
 import { rootColors } from '@/src/styles/styles';
 import CustomTabBar from 'Components/tabBar'; // <-- Seu componente customizado
+import * as NavigationBar from 'expo-navigation-bar';
 import { Tabs } from 'expo-router';
 
 export default function TabsLayout() {
+    NavigationBar.setVisibilityAsync('hidden')
+    
     return (
         <Tabs
             // Diga ao Expo Router para usar seu componente como a TabBar
             tabBar={(props) => <CustomTabBar {...props} />}
-
         >
             <Tabs.Screen name="home" options={{ title: 'Home', headerTitleAlign: 'center', headerStyle: { backgroundColor: rootColors.branco }, headerTintColor: rootColors.marrom }} />
             <Tabs.Screen name="favoritos" options={{ title: 'Favoritos', headerTitleAlign: 'center', headerStyle: { backgroundColor: rootColors.branco }, headerTintColor: rootColors.marrom }} />
