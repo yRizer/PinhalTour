@@ -38,5 +38,33 @@ export const styles = StyleSheet.create({
         top: -80, // Posiciona o botão 80px acima do topo do sheet
         right: 20,
         zIndex: 1001,
+    },
+    placeDescriptionContainer: {
+        flex: 1,
+        padding: 16,
+        gap: 20,
+    },
+    placeHeaderContainer: {
+        flexDirection: 'row',
+        width: '100%',
+    },
+    placeHeaderImage: {
+        width: 200,
+        height: 200,
+        resizeMode: 'cover',
+        borderRadius: 16,
+    },
+    placeHeaderInfoContainer: {
+        width: '100%',
+        marginLeft: 16,
+    },
+    placeFooterContainer: {
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+    },
+    placeFooterOptionsContainer: {
+        flexDirection: 'row',
+        gap: 15
     }
+
 });

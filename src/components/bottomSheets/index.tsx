@@ -1,6 +1,8 @@
+import { RightIconButton } from "@/src/components/buttons";
+import { rootColors, rootTexts } from "@/src/styles/styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
-import { Dimensions, Text, View } from "react-native";
+import { Dimensions, Image, Linking, Text, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, { SlideInDown, SlideOutDown, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 import { styles } from "./styles";
@@ -17,6 +19,15 @@ type SheetProps = {
     SetPosY?: number;
     Expand?: boolean;
     floatingButton?: React.ReactNode;
+    mapsData?: {
+        titulo: string,
+        endereco: string,
+        latitude: number,
+        longitude: number,
+        image: string,
+        distancia: number,
+        estrelas: number
+    };
 }
 
 export function SheetDown(
@@ -92,7 +103,8 @@ export function SheetUp(
         onClose = () => { },
         Expand = true,
         description,
-        floatingButton
+        floatingButton,
+        mapsData = undefined
 
     }: SheetProps
 ) {
@@ -127,6 +139,27 @@ export function SheetUp(
         transform: [{ translateY: SetPosY + offset.value }],
     }))
 
+    const openMap = async () => {
+        console.log(mapsData?.latitude, mapsData?.longitude);
+        
+    const url = `https://www.google.com/maps?q=${mapsData?.longitude},${mapsData?.latitude}z=14`;
+
+    try {
+      const supported = await Linking.canOpenURL(url);
+
+      if (supported) {
+        console.log(url);
+        
+        await Linking.openURL(url);
+        
+      } else {
+        console.log('Não foi possível abrir o mapa. Certifique-se de que o Google Maps está instalado no dispositivo.');
+      }
+    } catch (error) {
+      console.log('Ocorreu um erro ao tentar abrir o mapa.');
+    }
+  };
+
     return (
         <>
             {floatingButton && (
@@ -139,10 +172,51 @@ export function SheetUp(
                     style={[styles.container, { height: SheetHeight }, translateY]}
                     entering={SlideInDown.springify(100).damping(5)}
                     exiting={SlideOutDown}>
-                    <View style={styles.dragIcon}/>
+                    <View style={styles.dragIcon} />
                     <Text style={styles.textDescription}>{description}</Text>
+                    {mapsData &&
+                        (
+                            <View style={styles.placeDescriptionContainer}>
+                                <Text style={rootTexts.title}>{mapsData.titulo}</Text>
+
+                                <View style={styles.placeHeaderContainer}>
+                                    <Image source={{ uri: mapsData.image }} style={styles.placeHeaderImage}></Image>
+                                    <View style={styles.placeHeaderInfoContainer}>
+                                        <View style={{ flexDirection: 'row' }}>
+
+                                            {Array.from({ length: mapsData.estrelas }).map((_, i) => (
+                                                <MaterialCommunityIcons key={i} name="star" size={20} color={rootColors.amarelo} />
+                                            ))}
+
+                                            {Array.from({ length: 5 - Math.floor(mapsData.estrelas) }).map((_, i) => (
+                                                <MaterialCommunityIcons key={i} name="star-outline" size={20} color={rootColors.amarelo} />
+                                            ))}
+
+                                        </View>
+                                        <Text style={[rootTexts.auxiliary, { opacity: 0.5 }]}>({mapsData.estrelas})</Text>
+                                    </View>
+                                </View>
+                                <Text style={[rootTexts.text, { opacity: 0.7 }]}>{mapsData.endereco}</Text>
+                                <View style={styles.placeFooterContainer}>
+                                    <View style={styles.placeFooterOptionsContainer}>
+                                        <RightIconButton text="Google Maps"
+                                            width={'auto'}
+                                            backgroundColor={rootColors.branco}
+                                            textColor={rootColors.marrom}
+                                            outLine={{ borderWidth: 1, borderColor: rootColors.marrom }}
+                                            rightIcon="google-maps"
+                                            paddingHorizontal={10}
+                                            paddingVertical={5}
+                                            iconSize={24}
+                                            onPress={openMap}
+                                        />
+                                    </View>
+                                </View>
+                            </View>
+                        )
+                    }
                 </Animated.View>
-            </GestureDetector>
+            </GestureDetector >
         </>
     );
 }
