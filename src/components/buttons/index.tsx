@@ -62,7 +62,7 @@ export function RightIconButton({ width, backgroundColor, outLine, paddingVertic
                 paddingHorizontal: paddingHorizontal
             }
             ]}>
-            <Text style={rootTexts.text}>{text}</Text>
+            <Text style={[rootTexts.text, { color: textColor ? textColor : undefined }]}>{text}</Text>
             {rightIcon && (rightIcon in Ionicons.glyphMap) &&
                 <Ionicons name={rightIcon as keyof typeof Ionicons.glyphMap} size={iconSize} color={textColor ? textColor : rootColors.branco} />}
             {rightIcon && (rightIcon in MaterialCommunityIcons.glyphMap) &&
