@@ -166,7 +166,6 @@ export default function MapaScreen() {
           SetPosY={75}
           SheetHeight={1000}
           Percentage={true}
-          description="Arraste para cima para ver mais opções"
           mapsData={bottomSheetData}
         />
       }
