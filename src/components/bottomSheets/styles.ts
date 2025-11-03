@@ -64,7 +64,8 @@ export const styles = StyleSheet.create({
     },
     placeFooterOptionsContainer: {
         flexDirection: 'row',
-        gap: 15
+        gap: 15,
+        flexWrap: 'wrap',
     }
 
 });

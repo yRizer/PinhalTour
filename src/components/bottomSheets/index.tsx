@@ -15,7 +15,7 @@ type SheetProps = {
     SheetOverDrag?: number;
     onClose?: () => void;
     Close?: boolean;
-    description: string;
+    description?: string;
     SetPosY?: number;
     Expand?: boolean;
     floatingButton?: React.ReactNode;
@@ -140,25 +140,33 @@ export function SheetUp(
     }))
 
     const openMap = async () => {
-        console.log(mapsData?.latitude, mapsData?.longitude);
-        
-    const url = `https://www.google.com/maps?q=${mapsData?.longitude},${mapsData?.latitude}z=14`;
 
-    try {
-      const supported = await Linking.canOpenURL(url);
+        const url = `https://www.google.com/maps?q=${mapsData?.longitude},${mapsData?.latitude}z=14`;
 
-      if (supported) {
-        console.log(url);
-        
-        await Linking.openURL(url);
-        
-      } else {
-        console.log('Não foi possível abrir o mapa. Certifique-se de que o Google Maps está instalado no dispositivo.');
-      }
-    } catch (error) {
-      console.log('Ocorreu um erro ao tentar abrir o mapa.');
+        try {
+            const supported = await Linking.canOpenURL(url);
+
+            if (supported) {
+                console.log(url);
+
+                await Linking.openURL(url);
+
+            } else {
+                console.log('Não foi possível abrir o mapa. Certifique-se de que o Google Maps está instalado no dispositivo.');
+            }
+        } catch (error) {
+            console.log('Ocorreu um erro ao tentar abrir o mapa.');
+        }
+    };
+
+    async function navigateTo() {
+        console.log('Navegando para:', mapsData?.latitude, mapsData?.longitude);
     }
-  };
+
+    function marcarNoCalendario(){
+        console.log('Marcar no calendário');
+    }
+
 
     return (
         <>
@@ -173,7 +181,7 @@ export function SheetUp(
                     entering={SlideInDown.springify(100).damping(5)}
                     exiting={SlideOutDown}>
                     <View style={styles.dragIcon} />
-                    <Text style={styles.textDescription}>{description}</Text>
+                    {description && (<Text style={styles.textDescription}>{description}</Text>)}
                     {mapsData &&
                         (
                             <View style={styles.placeDescriptionContainer}>
@@ -209,6 +217,28 @@ export function SheetUp(
                                             paddingVertical={5}
                                             iconSize={24}
                                             onPress={openMap}
+                                        />
+                                        <RightIconButton text="Marcar Rota"
+                                            width={'auto'}
+                                            backgroundColor={rootColors.branco}
+                                            textColor={rootColors.marrom}
+                                            outLine={{ borderWidth: 1, borderColor: rootColors.marrom }}
+                                            rightIcon="navigate"
+                                            paddingHorizontal={10}
+                                            paddingVertical={5}
+                                            iconSize={24}
+                                            onPress={navigateTo}
+                                        />
+                                        <RightIconButton text="Marcar no Calendário"
+                                            width={'auto'}
+                                            backgroundColor={rootColors.branco}
+                                            textColor={rootColors.marrom}
+                                            outLine={{ borderWidth: 1, borderColor: rootColors.marrom }}
+                                            rightIcon="calendar-clear"
+                                            paddingHorizontal={10}
+                                            paddingVertical={5}
+                                            iconSize={24}
+                                            onPress={marcarNoCalendario}
                                         />
                                     </View>
                                 </View>
