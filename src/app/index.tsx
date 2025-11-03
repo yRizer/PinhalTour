@@ -1,6 +1,5 @@
 import * as NavigationBar from 'expo-navigation-bar';
 import { router } from 'expo-router';
-import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { Button } from '../components/buttons';
 import { rootColors, rootTexts } from '../styles/styles';
@@ -12,7 +11,6 @@ export default function App() {
     }
 
     NavigationBar.setVisibilityAsync('hidden')
-    // NavigationBar.setBehaviorAsync('overlay-swipe')
 
     return (
         <View style={styles.mainContainer}>
