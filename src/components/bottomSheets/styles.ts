@@ -61,11 +61,18 @@ export const styles = StyleSheet.create({
     placeFooterContainer: {
         flexDirection: 'column',
         justifyContent: 'space-between',
+        gap: 30
     },
-    placeFooterOptionsContainer: {
+    placeOptionsContainer: {
         flexDirection: 'row',
         gap: 15,
         flexWrap: 'wrap',
-    }
-
+    },
+    placeAvaliationsContainer: {
+        gap: 5,
+        flexDirection: 'row',
+        width: '100%',
+        height: '100%',
+        position: 'relative',
+    },
 });

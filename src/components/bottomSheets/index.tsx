@@ -2,7 +2,7 @@ import { RightIconButton } from "@/src/components/buttons";
 import { rootColors, rootTexts } from "@/src/styles/styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
-import { Dimensions, Image, Linking, Text, View } from "react-native";
+import { Dimensions, Image, Linking, ScrollView, Text, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, { SlideInDown, SlideOutDown, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 import { styles } from "./styles";
@@ -26,7 +26,14 @@ type SheetProps = {
         longitude: number,
         image: string,
         distancia: number,
-        estrelas: number
+        estrelas: number,
+        descricao: string,
+        avaliacoes: {
+            nome: string,
+            avaliacao: number,
+            comentario: string,
+            data: string,
+        }[],
     };
 }
 
@@ -114,26 +121,28 @@ export function SheetUp(
 
     const offset = useSharedValue(0);
 
-    const pan = Gesture.Pan().onChange(function (event) {
-        const offsetDelta = event.changeY + offset.value;
-        const clamp = Math.min(SheetOverDrag, Math.max(-SheetOverDrag, offsetDelta))
+    const pan = Gesture.Pan()
+        .onChange(function (event) {
+            const offsetDelta = event.changeY + offset.value;
+            const clamp = Math.min(SheetOverDrag, Math.max(-SheetOverDrag, offsetDelta))
 
-        if (offsetDelta < -SetPosY + 100) {
-            offset.value = offsetDelta > -SetPosY + 100 ? offsetDelta : withSpring(-SetPosY + 100 + clamp);
-        } else {
-            offset.value = offsetDelta < 0 ? offsetDelta : withSpring(clamp)
-        }
+            if (offsetDelta < -SetPosY + 100) {
+                offset.value = offsetDelta > -SetPosY + 100 ? offsetDelta : withSpring(-SetPosY + 100 + clamp);
+            } else {
+                offset.value = offsetDelta < 0 ? offsetDelta : withSpring(clamp)
+            }
 
-    })
+        })
         .onFinalize(function (event) {
             if (event.velocityY > 2000) {
                 offset.value = withSpring(0, { damping: 5, stiffness: 30, mass: 0.5 });
             } else if ((-offset.value > DIMENSIONS.height / 3 || event.velocityY < -2000) && Expand) {
                 offset.value = withSpring(-SetPosY + 100, { damping: 5, stiffness: 50, mass: 0.5 });
-            } else {
-                offset.value = withSpring(0, { damping: 5, stiffness: 50, mass: 0.5 });
             }
         })
+
+    const native = Gesture.Native();
+    const composed = Gesture.Race(native, pan);
 
     const translateY = useAnimatedStyle(() => ({
         transform: [{ translateY: SetPosY + offset.value }],
@@ -147,10 +156,7 @@ export function SheetUp(
             const supported = await Linking.canOpenURL(url);
 
             if (supported) {
-                console.log(url);
-
                 await Linking.openURL(url);
-
             } else {
                 console.log('Não foi possível abrir o mapa. Certifique-se de que o Google Maps está instalado no dispositivo.');
             }
@@ -163,10 +169,91 @@ export function SheetUp(
         console.log('Navegando para:', mapsData?.latitude, mapsData?.longitude);
     }
 
-    function marcarNoCalendario(){
+    function marcarNoCalendario() {
         console.log('Marcar no calendário');
     }
 
+    function selectedMapsData({ mapsData = undefined }: SheetProps) {
+        return (
+            mapsData &&
+            <ScrollView style={styles.placeDescriptionContainer}>
+                <Text style={rootTexts.title}>{mapsData.titulo}</Text>
+
+                <View style={styles.placeHeaderContainer}>
+                    <Image source={{ uri: mapsData.image }} style={styles.placeHeaderImage}></Image>
+                    <View style={styles.placeHeaderInfoContainer}>
+                        <View style={{ flexDirection: 'row' }}>
+
+                            {Array.from({ length: mapsData.estrelas }).map((_, i) => (
+                                <MaterialCommunityIcons key={i} name="star" size={20} color={rootColors.amarelo} />
+                            ))}
+
+                            {Array.from({ length: 5 - Math.floor(mapsData.estrelas) }).map((_, i) => (
+                                <MaterialCommunityIcons key={i} name="star-outline" size={20} color={rootColors.amarelo} />
+                            ))}
+
+                        </View>
+                        <Text style={[rootTexts.auxiliary, { opacity: 0.5 }]}>({mapsData.estrelas})</Text>
+                    </View>
+                </View>
+                <Text style={[rootTexts.text, { opacity: 0.7 }]}>{mapsData.endereco}</Text>
+                <View style={styles.placeFooterContainer}>
+                    <View style={styles.placeOptionsContainer}>
+                        <RightIconButton text="Google Maps"
+                            width={'auto'}
+                            backgroundColor={rootColors.branco}
+                            textColor={rootColors.marrom}
+                            outLine={{ borderWidth: 1, borderColor: rootColors.marrom }}
+                            rightIcon="google-maps"
+                            paddingHorizontal={10}
+                            paddingVertical={5}
+                            iconSize={24}
+                            onPress={openMap}
+                        />
+                        <RightIconButton text="Marcar Rota"
+                            width={'auto'}
+                            backgroundColor={rootColors.branco}
+                            textColor={rootColors.marrom}
+                            outLine={{ borderWidth: 1, borderColor: rootColors.marrom }}
+                            rightIcon="navigate"
+                            paddingHorizontal={10}
+                            paddingVertical={5}
+                            iconSize={24}
+                            onPress={navigateTo}
+                        />
+                        <RightIconButton text="Marcar no Calendário"
+                            width={'auto'}
+                            backgroundColor={rootColors.branco}
+                            textColor={rootColors.marrom}
+                            outLine={{ borderWidth: 1, borderColor: rootColors.marrom }}
+                            rightIcon="calendar-clear"
+                            paddingHorizontal={10}
+                            paddingVertical={5}
+                            iconSize={24}
+                            onPress={marcarNoCalendario}
+                        />
+                    </View>
+                    <View style={{ gap: 10 }}>
+                        <Text style={rootTexts.subtitle}>Avaliações</Text>
+                        <GestureDetector gesture={native}>
+                            <ScrollView style={[styles.placeAvaliationsContainer, { width: 400 }]}
+                                showsVerticalScrollIndicator={false}
+                            >
+                                {mapsData.avaliacoes.map((avaliacao, index) => (
+                                    <View key={index} style={{ width: 400 }} >
+                                        <Text>{avaliacao.nome}</Text>
+                                        <Text>{avaliacao.comentario}</Text>
+                                        <Text>{avaliacao.data}</Text>
+                                        <Text>{avaliacao.avaliacao}</Text>
+                                    </View>
+                                ))}
+                            </ScrollView>
+                        </GestureDetector>
+                    </View>
+                </View>
+            </ScrollView>
+        )
+    }
 
     return (
         <>
@@ -175,7 +262,7 @@ export function SheetUp(
                     {floatingButton}
                 </Animated.View>
             )}
-            <GestureDetector gesture={pan}>
+            <GestureDetector gesture={composed}>
                 <Animated.View
                     style={[styles.container, { height: SheetHeight }, translateY]}
                     entering={SlideInDown.springify(100).damping(5)}
@@ -183,67 +270,7 @@ export function SheetUp(
                     <View style={styles.dragIcon} />
                     {description && (<Text style={styles.textDescription}>{description}</Text>)}
                     {mapsData &&
-                        (
-                            <View style={styles.placeDescriptionContainer}>
-                                <Text style={rootTexts.title}>{mapsData.titulo}</Text>
-
-                                <View style={styles.placeHeaderContainer}>
-                                    <Image source={{ uri: mapsData.image }} style={styles.placeHeaderImage}></Image>
-                                    <View style={styles.placeHeaderInfoContainer}>
-                                        <View style={{ flexDirection: 'row' }}>
-
-                                            {Array.from({ length: mapsData.estrelas }).map((_, i) => (
-                                                <MaterialCommunityIcons key={i} name="star" size={20} color={rootColors.amarelo} />
-                                            ))}
-
-                                            {Array.from({ length: 5 - Math.floor(mapsData.estrelas) }).map((_, i) => (
-                                                <MaterialCommunityIcons key={i} name="star-outline" size={20} color={rootColors.amarelo} />
-                                            ))}
-
-                                        </View>
-                                        <Text style={[rootTexts.auxiliary, { opacity: 0.5 }]}>({mapsData.estrelas})</Text>
-                                    </View>
-                                </View>
-                                <Text style={[rootTexts.text, { opacity: 0.7 }]}>{mapsData.endereco}</Text>
-                                <View style={styles.placeFooterContainer}>
-                                    <View style={styles.placeFooterOptionsContainer}>
-                                        <RightIconButton text="Google Maps"
-                                            width={'auto'}
-                                            backgroundColor={rootColors.branco}
-                                            textColor={rootColors.marrom}
-                                            outLine={{ borderWidth: 1, borderColor: rootColors.marrom }}
-                                            rightIcon="google-maps"
-                                            paddingHorizontal={10}
-                                            paddingVertical={5}
-                                            iconSize={24}
-                                            onPress={openMap}
-                                        />
-                                        <RightIconButton text="Marcar Rota"
-                                            width={'auto'}
-                                            backgroundColor={rootColors.branco}
-                                            textColor={rootColors.marrom}
-                                            outLine={{ borderWidth: 1, borderColor: rootColors.marrom }}
-                                            rightIcon="navigate"
-                                            paddingHorizontal={10}
-                                            paddingVertical={5}
-                                            iconSize={24}
-                                            onPress={navigateTo}
-                                        />
-                                        <RightIconButton text="Marcar no Calendário"
-                                            width={'auto'}
-                                            backgroundColor={rootColors.branco}
-                                            textColor={rootColors.marrom}
-                                            outLine={{ borderWidth: 1, borderColor: rootColors.marrom }}
-                                            rightIcon="calendar-clear"
-                                            paddingHorizontal={10}
-                                            paddingVertical={5}
-                                            iconSize={24}
-                                            onPress={marcarNoCalendario}
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                        )
+                        selectedMapsData({ mapsData })
                     }
                 </Animated.View>
             </GestureDetector >
