@@ -166,6 +166,18 @@ export default function MapaScreen() {
               avaliacao: 3.5,
               comentario: 'Bonita, mas esperava mais da parte interna. A praça ao redor é agradável.',
               data: '2023-10-23'
+            },
+            {
+              nome: 'Mariana Santos',
+              avaliacao: 4,
+              comentario: 'Chique, muito xique xique bahia',
+              data: '2023-10-22'
+            },
+            {
+              nome: 'Xeila de Oliveira',
+              avaliacao: 5,
+              comentario: 'Achei muito é massa',
+              data: '2023-10-21'
             }
           ]
         }
@@ -198,7 +210,6 @@ export default function MapaScreen() {
       {bottomSheetData &&
         <SheetUp
           SetPosY={75}
-          SheetHeight={1000}
           Percentage={true}
           mapsData={bottomSheetData}
         />
