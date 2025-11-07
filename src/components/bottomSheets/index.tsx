@@ -5,6 +5,7 @@ import React from "react";
 import { Dimensions, Image, Linking, Text, View } from "react-native";
 import { Gesture, GestureDetector, ScrollView } from "react-native-gesture-handler";
 import Animated, { SlideInDown, SlideOutDown, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 import { styles } from "./styles";
 
 const DIMENSIONS = Dimensions.get('window');
@@ -118,7 +119,7 @@ export function SheetUp(
 ) {
     if (Percentage === true) {
         SetPosY = DIMENSIONS.height * (SetPosY / 100);
-        SheetHeight = SetPosY + 75;
+        SheetHeight = SetPosY + 50;
     } else {
         SheetHeight = DIMENSIONS.height - SetPosY;
         console.log(SetPosY, SheetHeight, DIMENSIONS.height);
@@ -144,6 +145,8 @@ export function SheetUp(
                 offset.value = withSpring(0, { damping: 5, stiffness: 30, mass: 0.5 });
             } else if ((-offset.value > DIMENSIONS.height / 3 || event.velocityY < -2000) && Expand) {
                 offset.value = withSpring(-SetPosY + 100, { damping: 5, stiffness: 25, mass: 0.5 });
+            } else if (offset.value > 0.5) {
+                scheduleOnRN(onClose);
             } else {
                 offset.value = withSpring(0, { damping: 5, stiffness: 30, mass: 0.5 });
             }
@@ -182,6 +185,38 @@ export function SheetUp(
     }
 
     function selectedMapsData({ mapsData = undefined }: SheetProps) {
+
+        function commentComponent({ index, avaliacao }: { index: number, avaliacao: { nome: string, avaliacao: number, comentario: string, data: string } }) {
+            return (
+                <View key={index} style={styles.comentaryContainer} >
+                    <View style={{ flexDirection: 'row', gap: 20, marginTop: 10 }}>
+                        <View style={{ height: '100%' }}>
+                            <Image source={{ uri: 'https://placehold.co/400/png' }} style={{ width: 60, height: 60, borderRadius: 50 }} />
+                        </View>
+                        <View style={{ flex: 1, height: '100%', gap: 10 }}>
+                            <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+                                <Text style={rootTexts.subtitle}>{avaliacao.nome}</Text>
+                                <View>
+                                    <View style={{ flexDirection: 'row' }}>
+                                        {Array.from({ length: avaliacao.avaliacao }).map((_, i) => (
+                                            <MaterialCommunityIcons key={i} name="star" size={12} color={rootColors.amarelo} />
+                                        ))}
+
+                                        {Array.from({ length: 5 - Math.floor(avaliacao.avaliacao) }).map((_, i) => (
+                                            <MaterialCommunityIcons key={i} name="star-outline" size={12} color={rootColors.amarelo} />
+                                        ))}
+                                    </View>
+                                    <Text style={[rootTexts.auxiliary, { opacity: 0.7 }]}>{avaliacao.data}</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+
+                    <Text style={rootTexts.text}>{avaliacao.comentario}</Text>
+                </View>
+            )
+        }
+
         return (
             mapsData &&
             <ScrollView style={styles.placeDescriptionContainer}>
@@ -249,12 +284,7 @@ export function SheetUp(
                         <View style={[styles.placeAvaliationsContainer]}
                         >
                             {mapsData.avaliacoes.map((avaliacao, index) => (
-                                <View key={index} style={styles.comentaryContainer} >
-                                    <Text>{avaliacao.nome}</Text>
-                                    <Text>{avaliacao.comentario}</Text>
-                                    <Text>{avaliacao.data}</Text>
-                                    <Text>{avaliacao.avaliacao}</Text>
-                                </View>
+                                commentComponent({ index, avaliacao })
                             ))}
                         </View>
                     </View>

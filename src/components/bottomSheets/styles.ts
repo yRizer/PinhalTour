@@ -78,10 +78,14 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 16,
     },
     comentaryContainer: {
+        gap: 20,
         padding: 10,
         width: '100%',
-        backgroundColor: rootColors.background,
         borderRadius: 24,
         paddingHorizontal: 24,
+        paddingVertical: 24,
+        position: 'relative',
+        justifyContent: 'space-between',
+        backgroundColor: rootColors.background,
     }
 });
