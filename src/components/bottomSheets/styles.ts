@@ -69,10 +69,19 @@ export const styles = StyleSheet.create({
         flexWrap: 'wrap',
     },
     placeAvaliationsContainer: {
-        gap: 5,
-        flexDirection: 'row',
+        gap: 20,
+        flexDirection: 'column',
         width: '100%',
         height: '100%',
         position: 'relative',
+        paddingBottom: 125,
+        paddingHorizontal: 16,
     },
+    comentaryContainer: {
+        padding: 10,
+        width: '100%',
+        backgroundColor: rootColors.background,
+        borderRadius: 24,
+        paddingHorizontal: 24,
+    }
 });

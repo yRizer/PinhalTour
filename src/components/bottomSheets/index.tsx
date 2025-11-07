@@ -2,8 +2,8 @@ import { RightIconButton } from "@/src/components/buttons";
 import { rootColors, rootTexts } from "@/src/styles/styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
-import { Dimensions, Image, Linking, ScrollView, Text, View } from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { Dimensions, Image, Linking, Text, View } from "react-native";
+import { Gesture, GestureDetector, ScrollView } from "react-native-gesture-handler";
 import Animated, { SlideInDown, SlideOutDown, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 import { styles } from "./styles";
 
@@ -74,6 +74,7 @@ export function SheetDown(
                         // runOnJS(close)();
                     });
                 }
+
             } else {
                 offset.value = withSpring(0);
             }
@@ -104,7 +105,7 @@ export function SheetDown(
 export function SheetUp(
     {
         SetPosY = 300,
-        SheetHeight = 100,
+        SheetHeight = 600,
         Percentage = false,
         SheetOverDrag = 10,
         onClose = () => { },
@@ -117,7 +118,12 @@ export function SheetUp(
 ) {
     if (Percentage === true) {
         SetPosY = DIMENSIONS.height * (SetPosY / 100);
+        SheetHeight = SetPosY + 75;
+    } else {
+        SheetHeight = DIMENSIONS.height - SetPosY;
+        console.log(SetPosY, SheetHeight, DIMENSIONS.height);
     }
+
 
     const offset = useSharedValue(0);
 
@@ -137,12 +143,14 @@ export function SheetUp(
             if (event.velocityY > 2000) {
                 offset.value = withSpring(0, { damping: 5, stiffness: 30, mass: 0.5 });
             } else if ((-offset.value > DIMENSIONS.height / 3 || event.velocityY < -2000) && Expand) {
-                offset.value = withSpring(-SetPosY + 100, { damping: 5, stiffness: 50, mass: 0.5 });
+                offset.value = withSpring(-SetPosY + 100, { damping: 5, stiffness: 25, mass: 0.5 });
+            } else {
+                offset.value = withSpring(0, { damping: 5, stiffness: 30, mass: 0.5 });
             }
         })
 
     const native = Gesture.Native();
-    const composed = Gesture.Race(native, pan);
+    const composed = Gesture.Simultaneous(pan, native);
 
     const translateY = useAnimatedStyle(() => ({
         transform: [{ translateY: SetPosY + offset.value }],
@@ -177,84 +185,83 @@ export function SheetUp(
         return (
             mapsData &&
             <ScrollView style={styles.placeDescriptionContainer}>
-                <Text style={rootTexts.title}>{mapsData.titulo}</Text>
+                <View style={{ gap: 10 }}>
+                    <Text style={rootTexts.title}>{mapsData.titulo}</Text>
+                    <View style={styles.placeHeaderContainer}>
+                        <Image source={{ uri: mapsData.image }} style={styles.placeHeaderImage}></Image>
+                        <View style={styles.placeHeaderInfoContainer}>
+                            <View style={{ flexDirection: 'row' }}>
 
-                <View style={styles.placeHeaderContainer}>
-                    <Image source={{ uri: mapsData.image }} style={styles.placeHeaderImage}></Image>
-                    <View style={styles.placeHeaderInfoContainer}>
-                        <View style={{ flexDirection: 'row' }}>
+                                {Array.from({ length: mapsData.estrelas }).map((_, i) => (
+                                    <MaterialCommunityIcons key={i} name="star" size={20} color={rootColors.amarelo} />
+                                ))}
 
-                            {Array.from({ length: mapsData.estrelas }).map((_, i) => (
-                                <MaterialCommunityIcons key={i} name="star" size={20} color={rootColors.amarelo} />
-                            ))}
+                                {Array.from({ length: 5 - Math.floor(mapsData.estrelas) }).map((_, i) => (
+                                    <MaterialCommunityIcons key={i} name="star-outline" size={20} color={rootColors.amarelo} />
+                                ))}
 
-                            {Array.from({ length: 5 - Math.floor(mapsData.estrelas) }).map((_, i) => (
-                                <MaterialCommunityIcons key={i} name="star-outline" size={20} color={rootColors.amarelo} />
-                            ))}
-
+                            </View>
+                            <Text style={[rootTexts.auxiliary, { opacity: 0.5 }]}>({mapsData.estrelas})</Text>
                         </View>
-                        <Text style={[rootTexts.auxiliary, { opacity: 0.5 }]}>({mapsData.estrelas})</Text>
                     </View>
                 </View>
-                <Text style={[rootTexts.text, { opacity: 0.7 }]}>{mapsData.endereco}</Text>
-                <View style={styles.placeFooterContainer}>
-                    <View style={styles.placeOptionsContainer}>
-                        <RightIconButton text="Google Maps"
-                            width={'auto'}
-                            backgroundColor={rootColors.branco}
-                            textColor={rootColors.marrom}
-                            outLine={{ borderWidth: 1, borderColor: rootColors.marrom }}
-                            rightIcon="google-maps"
-                            paddingHorizontal={10}
-                            paddingVertical={5}
-                            iconSize={24}
-                            onPress={openMap}
-                        />
-                        <RightIconButton text="Marcar Rota"
-                            width={'auto'}
-                            backgroundColor={rootColors.branco}
-                            textColor={rootColors.marrom}
-                            outLine={{ borderWidth: 1, borderColor: rootColors.marrom }}
-                            rightIcon="navigate"
-                            paddingHorizontal={10}
-                            paddingVertical={5}
-                            iconSize={24}
-                            onPress={navigateTo}
-                        />
-                        <RightIconButton text="Marcar no Calendário"
-                            width={'auto'}
-                            backgroundColor={rootColors.branco}
-                            textColor={rootColors.marrom}
-                            outLine={{ borderWidth: 1, borderColor: rootColors.marrom }}
-                            rightIcon="calendar-clear"
-                            paddingHorizontal={10}
-                            paddingVertical={5}
-                            iconSize={24}
-                            onPress={marcarNoCalendario}
-                        />
+                <View style={{ gap: 10 }}>
+                    <Text style={[rootTexts.text, { opacity: 0.7 }]}>{mapsData.endereco}</Text>
+                    <View style={styles.placeFooterContainer}>
+                        <View style={styles.placeOptionsContainer}>
+                            <RightIconButton text="Google Maps"
+                                width={'auto'}
+                                backgroundColor={rootColors.branco}
+                                textColor={rootColors.marrom}
+                                outLine={{ borderWidth: 1, borderColor: rootColors.marrom }}
+                                rightIcon="google-maps"
+                                paddingHorizontal={10}
+                                paddingVertical={5}
+                                iconSize={24}
+                                onPress={openMap}
+                            />
+                            <RightIconButton text="Marcar Rota"
+                                width={'auto'}
+                                backgroundColor={rootColors.branco}
+                                textColor={rootColors.marrom}
+                                outLine={{ borderWidth: 1, borderColor: rootColors.marrom }}
+                                rightIcon="navigate"
+                                paddingHorizontal={10}
+                                paddingVertical={5}
+                                iconSize={24}
+                                onPress={navigateTo}
+                            />
+                            <RightIconButton text="Marcar no Calendário"
+                                width={'auto'}
+                                backgroundColor={rootColors.branco}
+                                textColor={rootColors.marrom}
+                                outLine={{ borderWidth: 1, borderColor: rootColors.marrom }}
+                                rightIcon="calendar-clear"
+                                paddingHorizontal={10}
+                                paddingVertical={5}
+                                iconSize={24}
+                                onPress={marcarNoCalendario}
+                            />
+                        </View>
                     </View>
                     <View style={{ gap: 10 }}>
                         <Text style={rootTexts.subtitle}>Avaliações</Text>
-                        <GestureDetector gesture={native}>
-                            <ScrollView style={[styles.placeAvaliationsContainer, { width: 400 }]}
-                                showsVerticalScrollIndicator={false}
-                            >
-                                {mapsData.avaliacoes.map((avaliacao, index) => (
-                                    <View key={index} style={{ width: 400 }} >
-                                        <Text>{avaliacao.nome}</Text>
-                                        <Text>{avaliacao.comentario}</Text>
-                                        <Text>{avaliacao.data}</Text>
-                                        <Text>{avaliacao.avaliacao}</Text>
-                                    </View>
-                                ))}
-                            </ScrollView>
-                        </GestureDetector>
+                        <View style={[styles.placeAvaliationsContainer]}
+                        >
+                            {mapsData.avaliacoes.map((avaliacao, index) => (
+                                <View key={index} style={styles.comentaryContainer} >
+                                    <Text>{avaliacao.nome}</Text>
+                                    <Text>{avaliacao.comentario}</Text>
+                                    <Text>{avaliacao.data}</Text>
+                                    <Text>{avaliacao.avaliacao}</Text>
+                                </View>
+                            ))}
+                        </View>
                     </View>
                 </View>
             </ScrollView>
         )
     }
-
     return (
         <>
             {floatingButton && (
