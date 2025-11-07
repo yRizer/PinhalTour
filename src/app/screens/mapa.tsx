@@ -145,25 +145,25 @@ export default function MapaScreen() {
           avaliacoes: [
             {
               nome: 'Ana Silva',
-              avaliacao: 4.5,
+              avaliacao: 4,
               comentario: 'Linda igreja, muito bem conservada e com uma energia incrível. Vale a pena a visita!',
               data: '2023-10-26'
             },
             {
               nome: 'Carlos Oliveira',
-              avaliacao: 5.0,
+              avaliacao: 5,
               comentario: 'Arquitetura impressionante e um lugar de muita paz. Recomendo a todos que visitarem Pinhal.',
               data: '2023-10-25'
             },
             {
               nome: 'Beatriz Costa',
-              avaliacao: 4.0,
+              avaliacao: 4,
               comentario: 'Um pouco antiga, mas com muitos detalhes interessantes. Gostei da visita guiada.',
               data: '2023-10-24'
             },
             {
               nome: 'Fernando Rocha',
-              avaliacao: 3.5,
+              avaliacao: 3,
               comentario: 'Bonita, mas esperava mais da parte interna. A praça ao redor é agradável.',
               data: '2023-10-23'
             },
@@ -178,6 +178,12 @@ export default function MapaScreen() {
               avaliacao: 5,
               comentario: 'Achei muito é massa',
               data: '2023-10-21'
+            },
+            {
+              nome: 'Pardo Xande',
+              avaliacao: 4,
+              comentario: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum, consectetur adipiscing elit, lorem ipsum dolor sit amet, consectetur adipiscing elit. A lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.',
+              data: '2023-10-20'
             }
           ]
         }
@@ -192,7 +198,7 @@ export default function MapaScreen() {
   return (
     <GestureHandlerRootView style={[rootStyles.container, { justifyContent: 'center', alignItems: 'center', backgroundColor: '#222222ff' }]}>
       <View style={styles.mapHeader}>
-        <MainTextInput placeholder='Pesquise algum lugar...' />
+        <MainTextInput placeholder='Pesquise algum lugar...' marginInline={20} />
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoriesContainer}>
           {dataCategories.map(((item) => (
             categoryItem({ item })
@@ -212,6 +218,7 @@ export default function MapaScreen() {
           SetPosY={75}
           Percentage={true}
           mapsData={bottomSheetData}
+          onClose={apagarSheetData}
         />
       }
     </GestureHandlerRootView>
@@ -222,7 +229,7 @@ const styles = StyleSheet.create({
   mapHeader: {
     position: 'absolute',
     top: 25,
-    width: '90%',
+    width: '100%',
     height: 'auto',
   },
   inputSearch: {
@@ -233,6 +240,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     flexDirection: 'row',
     gap: 10,
+    paddingHorizontal: 20,
     overflow: 'visible',
   },
   categoryItem: {
