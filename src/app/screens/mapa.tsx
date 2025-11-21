@@ -66,6 +66,7 @@ export default function MapaScreen() {
         // Opcional: O que fazer quando a tela PERDE foco
         // Útil se você quiser reverter a animação
         opacity.value = withTiming(0, { duration: 200 });
+        apagarSheetData();
       };
     }, [])
   );
@@ -219,6 +220,7 @@ export default function MapaScreen() {
           Percentage={true}
           mapsData={bottomSheetData}
           onClose={apagarSheetData}
+          toClose={true}
         />
       }
     </GestureHandlerRootView>
