@@ -19,7 +19,7 @@ export default function App() {
                 <Image source={require('Images/logo/logo.png')} style={{ width: 'auto', height: 75, aspectRatio: 1, marginBottom: 20 }} resizeMode='cover' />
                 <Text style={[rootTexts.title, { marginBottom: 20 }]}>Bem Vindo</Text>
                 <Text style={[rootTexts.text, { textAlign: 'center' }]}>Explore os encantos de Espirito Santo do Pinhal</Text>
-            </View>
+                </View>
             <View style={styles.bottomContainer}>
                 <Button text="Fazer Login" leftIcon='person-circle' rightIcon='arrow-forward' />
                 <Button text="Escanear QR Code" backgroundColor={rootColors.branco} textColor={rootColors.marrom} outLine={{ borderWidth: 3, borderColor: rootColors.marrom }} leftIcon='qr-code' rightIcon='arrow-forward' />
