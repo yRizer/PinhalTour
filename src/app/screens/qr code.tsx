@@ -1,8 +1,10 @@
 // app/index.js (ou qualquer tela sua)
+import { InvalidQRCodeModal } from '@/src/components/modals';
 import { rootStyles } from '@/src/styles/styles';
+import { isValidQRCode } from 'Utils/validators/qrValidator';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { useFocusEffect } from 'expo-router';
-import React, { useCallback, useEffect, useRef } from 'react';
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -15,7 +17,7 @@ export default function QRScannerScreen() {
   const opacity = useSharedValue(0);
   const qrCodeLock = useRef(false);
   const [hasPermission, setHasPermission] = useCameraPermissions();
-
+  const [modalInvalidQRCode, setModalInvalidQRCode] = useState(false);
 
   // 2. Crie o estilo animado
   const animatedStyle = useAnimatedStyle(() => {
@@ -47,7 +49,13 @@ export default function QRScannerScreen() {
 
   function handleQRCodeScanned(data: string) {
     console.log(data);
-    // router.push({ pathname: '/qr-description', params: { QRCode: data } });
+    if (!isValidQRCode(data)) {
+      console.log('QR Code inválido');
+      setModalInvalidQRCode(true)
+    } else {
+      console.log('QR Code válido');
+      router.push({ pathname: '/qrDescription', params: { QRCode: data } });
+    }
   }
 
   return (
@@ -63,6 +71,10 @@ export default function QRScannerScreen() {
       <View style={styles.disfocusOverlay}>
         <View style={styles.focusArea} />
       </View>
+      <InvalidQRCodeModal visible={modalInvalidQRCode} onClose={() => {
+        setModalInvalidQRCode(false)
+        qrCodeLock.current = false
+      }} />
     </Animated.View>
   );
 }
