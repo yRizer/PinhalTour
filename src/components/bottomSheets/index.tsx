@@ -1,10 +1,10 @@
 import { RightIconButton } from "@/src/components/buttons";
 import { rootColors, rootTexts } from "@/src/styles/styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import React from "react";
 import { Dimensions, Image, Linking, Text, View } from "react-native";
 import { Gesture, GestureDetector, ScrollView } from "react-native-gesture-handler";
 import Animated, { SlideInDown, SlideOutDown, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { scheduleOnRN } from "react-native-worklets";
 import { styles } from "./styles";
 
@@ -20,6 +20,7 @@ type SheetProps = {
     SetPosY?: number;
     Expand?: boolean;
     floatingButton?: React.ReactNode;
+    toClose?: boolean;
     mapsData?: {
         titulo: string,
         endereco: string,
@@ -106,25 +107,25 @@ export function SheetDown(
 export function SheetUp(
     {
         SetPosY = 300,
-        SheetHeight = 600,
         Percentage = false,
         SheetOverDrag = 10,
         onClose = () => { },
         Expand = true,
         description,
         floatingButton,
-        mapsData = undefined
+        mapsData = undefined,
+        toClose = false
 
     }: SheetProps
 ) {
+    
+    var SafeAreaInsets = useSafeAreaInsets();
+
     if (Percentage === true) {
         SetPosY = DIMENSIONS.height * (SetPosY / 100);
-        SheetHeight = SetPosY + 50;
-    } else {
-        SheetHeight = DIMENSIONS.height - SetPosY;
-        console.log(SetPosY, SheetHeight, DIMENSIONS.height);
     }
-
+    
+    var SheetHeight = DIMENSIONS.height - SafeAreaInsets.top - 100 + SheetOverDrag;
 
     const offset = useSharedValue(0);
 
@@ -145,8 +146,10 @@ export function SheetUp(
                 offset.value = withSpring(0, { damping: 5, stiffness: 30, mass: 0.5 });
             } else if ((-offset.value > DIMENSIONS.height / 3 || event.velocityY < -2000) && Expand) {
                 offset.value = withSpring(-SetPosY + 100, { damping: 5, stiffness: 25, mass: 0.5 });
-            } else if (offset.value > 0.5) {
+            } else if (offset.value > 0.5 && toClose) {
                 scheduleOnRN(onClose);
+                console.log('Fechando');
+                
             } else {
                 offset.value = withSpring(0, { damping: 5, stiffness: 30, mass: 0.5 });
             }
@@ -189,7 +192,7 @@ export function SheetUp(
         function commentComponent({ index, avaliacao }: { index: number, avaliacao: { nome: string, avaliacao: number, comentario: string, data: string } }) {
             return (
                 <View key={index} style={styles.comentaryContainer} >
-                    <View style={{ flexDirection: 'row', gap: 20, marginTop: 10 }}>
+                    <View style={{ flexDirection: 'row', gap: 20 }}>
                         <View style={{ height: '100%' }}>
                             <Image source={{ uri: 'https://placehold.co/400/png' }} style={{ width: 60, height: 60, borderRadius: 50 }} />
                         </View>
@@ -292,6 +295,7 @@ export function SheetUp(
             </ScrollView>
         )
     }
+    
     return (
         <>
             {floatingButton && (

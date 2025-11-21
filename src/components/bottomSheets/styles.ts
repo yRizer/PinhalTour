@@ -14,8 +14,8 @@ export const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 0 },
         shadowOpacity: 0.5,
-        shadowRadius: 10,
-        elevation: 5,
+        shadowRadius: 3.84,
+        elevation: 10,
     },
     dragIcon: {
         alignSelf: 'center',
@@ -43,6 +43,7 @@ export const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
         gap: 20,
+        marginBottom: 125,
     },
     placeHeaderContainer: {
         flexDirection: 'row',
