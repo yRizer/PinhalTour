@@ -1,7 +1,7 @@
 // app/index.js (ou qualquer tela sua)
 import { rootStyles, rootTexts } from '@/src/styles/styles';
 import { useFocusEffect } from 'expo-router'; // ou '@react-navigation/native'
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
