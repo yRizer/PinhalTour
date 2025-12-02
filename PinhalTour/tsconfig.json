@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "strict": true,
+    "paths": {
+      "@/*": [
+        "./*"
+      ],
+      "Images/*": [
+        "./src/assets/images/*"
+      ],
+      "Components/*": [
+        "./src/components/*"
+      ],
+      "Utils/*": [
+        "./src/utils/*"
+      ]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ],
+  "extends": "expo/tsconfig.base"
+}
