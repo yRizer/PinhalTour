@@ -3,7 +3,7 @@ import { rootColors, rootStyles } from '@/src/styles/styles';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from 'expo-router';
 import { useCallback } from 'react';
-import { View, Text, ScrollView, Image, Pressable, StyleSheet } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
   },
   tituloSecao: {
     fontSize: 20,
-    fontWeight: '800',
+    fontWeight: '600',
     color: rootColors.marrom,
     marginBottom: 16,
     paddingHorizontal: 16,
@@ -231,6 +231,7 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     paddingRight: 16,
     paddingBottom: 16,
+    marginBottom: 25,
   },
   cardLugar: {
     backgroundColor: rootColors.branco,
