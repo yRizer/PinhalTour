@@ -34,16 +34,16 @@ export function Button({ text, width = '100%', outLine, backgroundColor, textCol
             onPress={onPress}>
 
             {leftIcon && (leftIcon in Ionicons.glyphMap) &&
-                <Ionicons name={leftIcon as keyof typeof Ionicons.glyphMap} size={iconSize} color={textColor ? textColor : rootColors.branco} style={{ position: 'absolute', left: 30 }} />}
+                <Ionicons name={leftIcon as keyof typeof Ionicons.glyphMap} size={iconSize} color={textColor ? textColor : rootColors.branco} />}
             {leftIcon && (leftIcon in MaterialCommunityIcons.glyphMap) &&
-                <MaterialCommunityIcons name={leftIcon as keyof typeof MaterialCommunityIcons.glyphMap} size={iconSize} color={textColor ? textColor : rootColors.branco} style={{ position: 'absolute', left: 30 }} />}
+                <MaterialCommunityIcons name={leftIcon as keyof typeof MaterialCommunityIcons.glyphMap} size={iconSize} color={textColor ? textColor : rootColors.branco} />}
 
             <Text style={[styles.textButton, { color: textColor ? textColor : rootColors.branco }]}>{text}</Text>
 
             {rightIcon && (rightIcon in Ionicons.glyphMap) &&
-                <Ionicons name={rightIcon as keyof typeof Ionicons.glyphMap} size={iconSize} color={textColor ? textColor : rootColors.branco} style={{ position: 'absolute', right: 30 }} />}
+                <Ionicons name={rightIcon as keyof typeof Ionicons.glyphMap} size={iconSize} color={textColor ? textColor : rootColors.branco} />}
             {rightIcon && (rightIcon in MaterialCommunityIcons.glyphMap) &&
-                <MaterialCommunityIcons name={rightIcon as keyof typeof MaterialCommunityIcons.glyphMap} size={iconSize} color={textColor ? textColor : rootColors.branco} style={{ position: 'absolute', right: 30 }} />}
+                <MaterialCommunityIcons name={rightIcon as keyof typeof MaterialCommunityIcons.glyphMap} size={iconSize} color={textColor ? textColor : rootColors.branco} />}
 
         </Pressable>
     );
