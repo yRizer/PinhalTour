@@ -6,11 +6,12 @@ export const styles = {
         justifyContent: "center" as const,
         padding: 10,
         boxSizing: 'border-box',
-        flexDirection: 'row',
+        flexDirection: 'row' as const,
+        gap: 10,
     },
     textButton: {
-        fontSize: 24,
-        fontWeight: "500" as const,
+        fontSize: 18,
+        fontWeight: "600" as const,
     },
     RightIconButtonContainer: {
         paddingVertical: 8,

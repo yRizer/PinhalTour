@@ -12,11 +12,11 @@ export default function TabsLayout() {
             // Diga ao Expo Router para usar seu componente como a TabBar
             tabBar={(props : any) => <CustomTabBar {...props} />}
         >
-            <Tabs.Screen name="home" options={{ title: 'Home', headerTitleAlign: 'center', headerStyle: { backgroundColor: rootColors.branco }, headerTintColor: rootColors.marrom }} />
-            <Tabs.Screen name="favoritos" options={{ title: 'Favoritos', headerTitleAlign: 'center', headerStyle: { backgroundColor: rootColors.branco }, headerTintColor: rootColors.marrom }} />
+            <Tabs.Screen name="home" options={{ headerShown: false }} />
+            <Tabs.Screen name="favoritos" options={{ headerShown: false }} />
             <Tabs.Screen name="qr code" options={{ title: 'QR Code', headerTitleAlign: 'center', headerStyle: { backgroundColor: rootColors.branco }, headerTintColor: rootColors.marrom }} />
             <Tabs.Screen name="mapa" options={{ title: 'Mapa', headerTitleAlign: 'center', headerStyle: { backgroundColor: rootColors.branco }, headerTintColor: rootColors.marrom }} />
-            <Tabs.Screen name="eventos" options={{ title: 'Eventos', tabBarBadge: 3, headerTitleAlign: 'center', headerStyle: { backgroundColor: rootColors.branco }, headerTintColor: rootColors.marrom }} />
+            <Tabs.Screen name="eventos" options={{ headerShown: false }} />
         </Tabs>
     );
 }
