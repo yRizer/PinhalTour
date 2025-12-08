@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
     top: 8,
     right: 8,
     backgroundColor: '#F9F6F0CF',
-    borderRadius: 15,
+    borderRadius: 50,
     padding: 6,
   },
   infoLugar: {
