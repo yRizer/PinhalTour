@@ -14,7 +14,10 @@
       ],
       "Utils/*": [
         "./src/utils/*"
-      ]
+      ],
+      "Assets/*": [
+        "./src/assets/*"
+      ],
     }
   },
   "include": [
