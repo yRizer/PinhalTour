@@ -1,5 +1,5 @@
 import { rootColors, rootTexts } from "@/src/styles/styles";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -36,7 +36,7 @@ export function MainHeader({ onMenuPress, onUserPress }: MainHeaderProps) {
     return (
         <SafeAreaView style={styles.header}>
             <Pressable style={styles.menuButton} onPress={onMenuPress}>
-                <Ionicons name="menu" size={28} color={rootColors.marrom} />
+                <MaterialCommunityIcons name="cog-outline" size={28} color={rootColors.marrom} />
             </Pressable>
             
             <Image 
