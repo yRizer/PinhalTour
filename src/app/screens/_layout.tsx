@@ -6,16 +6,16 @@ import { Tabs } from 'expo-router';
 
 export default function TabsLayout() {
     NavigationBar.setVisibilityAsync('hidden')
-    
+
     return (
         <Tabs
             // Diga ao Expo Router para usar seu componente como a TabBar
-            tabBar={(props : any) => <CustomTabBar {...props} />}
+            tabBar={(props: any) => <CustomTabBar {...props} />}
         >
             <Tabs.Screen name="home" options={{ headerShown: false }} />
             <Tabs.Screen name="favoritos" options={{ headerShown: false }} />
             <Tabs.Screen name="qr code" options={{ title: 'QR Code', headerTitleAlign: 'center', headerStyle: { backgroundColor: rootColors.branco }, headerTintColor: rootColors.marrom }} />
-            <Tabs.Screen name="mapa" options={{ title: 'Mapa', headerTitleAlign: 'center', headerStyle: { backgroundColor: rootColors.branco }, headerTintColor: rootColors.marrom }} />
+            <Tabs.Screen name="mapa" options={{ headerShown: false, title: 'Mapa', headerTitleAlign: 'center', headerStyle: { backgroundColor: rootColors.branco }, headerTintColor: rootColors.marrom }} />
             <Tabs.Screen name="eventos" options={{ headerShown: false }} />
         </Tabs>
     );
