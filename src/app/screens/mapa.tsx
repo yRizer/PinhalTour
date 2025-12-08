@@ -1,12 +1,12 @@
 // app/index.js (ou qualquer tela sua)
 import { SheetUp } from '@/src/components/bottomSheets';
-import { Button } from '@/src/components/buttons';
 import MainTextInput from '@/src/components/textInput';
 import { rootColors, rootStyles, rootTexts } from '@/src/styles/styles';
 import { Ionicons } from '@expo/vector-icons';
+import Mapbox, { Camera, locationManager, LocationPuck, MapView, MarkerView, requestAndroidLocationPermissions } from '@rnmapbox/maps';
 import { useFocusEffect } from 'expo-router'; // ou '@react-navigation/native'
 import React, { useCallback, useEffect } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, {
   interpolateColor,
@@ -14,6 +14,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const dataCategories: { id: string; name: string; icon: keyof typeof Ionicons.glyphMap }[] = [
   { id: '1', name: 'Históricos', icon: 'hourglass-outline' },
@@ -196,23 +197,38 @@ export default function MapaScreen() {
     setBottomSheetData(undefined);
   }
 
+  function handleMarkerClicked(ponto: typeof pontosTuristicos[0]) {
+    adicionarSheetData();
+  }
+
+  const MAPBOX_PUBLIC_TOKEN = 'pk.eyJ1Ijoicnl6ZXIiLCJhIjoiY21memo3NnMzMDNhNTJvb3JyOGt2N3h1ayJ9.oIBS2SuCrZMbGJ4tY424iQ';
+
+  Mapbox.setAccessToken(MAPBOX_PUBLIC_TOKEN);
+
+  requestAndroidLocationPermissions().then(() => {
+    locationManager.start();
+  });
+
   return (
-    <GestureHandlerRootView style={[rootStyles.container, { justifyContent: 'center', alignItems: 'center', backgroundColor: '#222222ff' }]}>
-      <View style={styles.mapHeader}>
+    <GestureHandlerRootView style={[rootStyles.container, { backgroundColor: '#222222ff' }]}>
+
+      <Mapa onMarkerClicked={handleMarkerClicked} />
+
+      <SafeAreaView style={styles.mapHeader}>
         <MainTextInput placeholder='Pesquise algum lugar...' marginInline={20} />
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categoriesContainer}>
           {dataCategories.map(((item) => (
             categoryItem({ item })
           )))}
         </ScrollView>
-      </View>
+      </SafeAreaView>
 
-      <Animated.Text style={[rootTexts.title, animatedStyle, { color: rootColors.branco }]}>
+      {/* <Animated.Text style={[rootTexts.title, animatedStyle, { color: rootColors.branco }]}>
         Mapa
-      </Animated.Text>
+      </Animated.Text> */}
 
-      <Button text='teste' width={'auto'} onPress={adicionarSheetData} />
-      <Button text='apagar' width={'auto'} onPress={apagarSheetData} />
+      {/* <Button text='teste' width={'auto'} onPress={adicionarSheetData} />
+      <Button text='apagar' width={'auto'} onPress={apagarSheetData} /> */}
 
       {bottomSheetData &&
         <SheetUp
@@ -227,10 +243,129 @@ export default function MapaScreen() {
   );
 }
 
+type MapaProps = {
+  onMarkerClicked?: (ponto: typeof pontosTuristicos[0]) => void;
+};
+
+export function Mapa({ onMarkerClicked }: MapaProps) {
+
+  function handleMarkerClicked(ponto: typeof pontosTuristicos[0]) {
+    if (onMarkerClicked) {
+      onMarkerClicked(ponto);
+    }
+  }
+
+
+  return (
+    <MapView
+      logoEnabled={false}
+      attributionEnabled={false}
+      style={[{ flex: 1 }]}
+      styleURL='mapbox://styles/mapbox/dark-v11' projection='globe'
+      compassEnabled={true}
+      compassPosition={{ bottom: 20, right: 20 }}
+      scaleBarPosition={{ bottom: 20, left: 20 }}
+    >
+      <Camera
+        zoomLevel={13}
+        animationMode={'flyTo'}
+        animationDuration={3000}
+        followUserLocation={false}
+        centerCoordinate={[-46.75694597373476, -22.193703351116405]}
+      />
+
+      {pontosTuristicos.map((ponto) => {
+        // Verificamos se este marcador é o que está selecionado
+
+        return (
+          <MarkerView
+            key={ponto.id}
+            id={ponto.id.toString()}
+            coordinate={ponto.coordenadas}
+            allowOverlap={true}
+          >
+            {/* O Pressable é o container. Seu estilo muda se for selecionado */}
+            <Pressable
+              // Usamos uma função no estilo para adicionar estilos condicionais
+              style={[
+                styles.markerContainer,
+              ]}
+              pointerEvents='auto'
+              onPressIn={(event) => {
+                handleMarkerClicked(ponto)
+              }}
+            >
+              <Image source={ponto.imagem} style={styles.markerImage} />
+            </Pressable>
+          </MarkerView>
+        );
+      })}
+
+      <LocationPuck
+        visible={true}
+        puckBearingEnabled={true}
+        puckBearing={'heading'}
+        pulsing={{ isEnabled: true }}
+      />
+    </MapView>
+  )
+}
+
+const pontosTuristicos = [
+  {
+    id: 1,
+    nome: 'Igreja Matriz',
+    descricao: 'Uma bela igreja histórica no centro da cidade.',
+    coordenadas: [-46.74681904570734, -22.193903727089243], // Exemplo de coordenadas (longitude, latitude)
+    imagem: require('../../../assets/images/imagesMapMarker/IgrejaMatriz.jpg'), // Substitua pelo caminho da imagem local
+  },
+  {
+    id: 2,
+    nome: 'Museu da Cidade',
+    descricao: 'Um museu que conta a história da cidade.',
+    coordenadas: [-46.748, -22.195], // Exemplo de coordenadas (longitude, latitude)
+    imagem: require('../../../assets/images/imagesMapMarker/MuseuCidade.jpg'), // Substitua pelo caminho da imagem local
+  },
+  {
+    id: 3,
+    nome: 'Praça da Independência',
+    descricao: 'Uma praça histórica onde ocorreram eventos importantes.',
+    coordenadas: [-46.749, -22.194], // Exemplo de coordenadas (longitude, latitude)
+    imagem: require('../../../assets/images/imagesMapMarker/PracaIndependencia.jpg'), // Substitua pelo caminho da imagem local
+  },
+  {
+    id: 4,
+    nome: 'Palacio do Café',
+    descricao: 'Um palácio histórico que remonta à era do café.',
+    coordenadas: [-46.750, -22.196], // Exemplo de coordenadas (longitude, latitude)
+    imagem: require('../../../assets/images/imagesMapMarker/PalacioCafe.jpg'), // Substitua pelo caminho da imagem local
+  },
+  {
+    id: 5,
+    nome: 'Cânara Municipal',
+    descricao: 'A sede do governo local com arquitetura impressionante.',
+    coordenadas: [-46.751, -22.193], // Exemplo de coordenadas (longitude, latitude)
+    imagem: require('../../../assets/images/imagesMapMarker/CamaraMunicipal.jpg'), // Substitua pelo caminho da imagem local
+  },
+  {
+    id: 6,
+    nome: 'Cine Theatro Avenida',
+    descricao: 'Um teatro histórico que exibe filmes clássicos e peças teatrais.',
+    coordenadas: [-46.752, -22.197], // Exemplo de coordenadas (longitude, latitude)
+    imagem: require('../../../assets/images/imagesMapMarker/CineTheatroAvenida.jpg'), // Substitua pelo caminho da imagem local
+  },
+  {
+    id: 7,
+    nome: 'Cia da Hebe',
+    descricao: 'peça central na história de Espírito Santo do Pinhal. Construído em 1903, a princípio como residência, o casarão abrigou setores municipais e o primeiro cartório da comarca.',
+    coordenadas: [-46.753, -22.198], // Exemplo de coordenadas (longitude, latitude)
+    imagem: require('../../../assets/images/imagesMapMarker/CiaHebe.jpg'), // Substitua pelo caminho da imagem local
+  },
+]
+
 const styles = StyleSheet.create({
   mapHeader: {
     position: 'absolute',
-    top: 25,
     width: '100%',
     height: 'auto',
   },
@@ -253,5 +388,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  markerContainer: {
+    backgroundColor: '#ffffff',
+    borderRadius: 40,
+    borderColor: '#8C3B4A',
+    borderWidth: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 80,
+    height: 80,
+    overflow: 'hidden',
+    zIndex: 1,
+  },
+  markerImage: {
+    width: 68,
+    height: 68,
+    borderRadius: 34,
+    resizeMode: 'stretch',
   },
 })
