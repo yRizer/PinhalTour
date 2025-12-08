@@ -94,7 +94,7 @@ export default function EventosScreen() {
   const diasCalendario = gerarDiasCalendario();
   const nomesMeses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
                        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-  const diasSemana = ['SAB', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'DOM'];
+  const diasSemana = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
 
   return (
     <Animated.View style={[rootStyles.container, animatedStyle]}>
