@@ -88,5 +88,10 @@ export const styles = StyleSheet.create({
         position: 'relative',
         justifyContent: 'space-between',
         backgroundColor: rootColors.background,
+    },
+    contentContainer: {
+        paddingHorizontal: 16,
+        gap: 15,
+        marginTop: 30,
     }
 });
