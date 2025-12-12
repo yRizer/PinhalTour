@@ -9,6 +9,7 @@ import { StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-n
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { rootColors } from '../styles/styles';
+import { CONTENT_DATA } from './data/qrDescription';
 
 
 
@@ -70,40 +71,9 @@ export default function QRDescriptionScreen() {
         router.dismissTo('/screens/qr code');
     };
 
-    const content = [
-        {
-            type: 'title',
-            value: 'Igreja Matriz de Pinhal'
-        },
-        {            
-            type: 'subtitle',
-            value: 'História'
-        },
-        {
-            type: 'text',
-            value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.'            
-        },
-        {
-            type: 'image',
-            value: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2h1cmNoZXN8ZW58MHx8MHx8fDA%3D&w=1000&q=80'
-        },
-        {
-            type: 'text',
-            value: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-        },
-        {
-            type: 'text',
-            value: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.'
-        },
-        {
-            type: 'text',
-            value: 'Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?'
-        }
-    ]
-
     return (
         <View style={{ flex: 1 }}>
-            <DefaultHeader title={'igreja'} backTo={()=>{router.dismissTo('/screens/qr code')}}/>
+            <DefaultHeader title={'Igreja'} backTo={()=>{router.dismissTo('/screens/qr code')}}/>
             <SafeAreaProvider>
                 <SafeAreaView style={[styles.container]} edges={['top']}>
                     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -149,7 +119,7 @@ export default function QRDescriptionScreen() {
                                     Close={false}
                                     // description={'teste'}
                                     floatingButton={renderFloatingButton()}
-                                    content={content}
+                                    content={CONTENT_DATA}
                                 />
                             </View>
                         )}
