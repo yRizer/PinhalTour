@@ -15,6 +15,7 @@ type ButtonProps = {
     outLine?: { borderWidth: number, borderColor: string };
     leftIcon?: keyof typeof Ionicons.glyphMap | keyof typeof MaterialCommunityIcons.glyphMap;
     rightIcon?: keyof typeof Ionicons.glyphMap | keyof typeof MaterialCommunityIcons.glyphMap;
+    borderRadius?: number;
     onPress?: () => void;
 }
 
@@ -49,7 +50,7 @@ export function Button({ text, width = '100%', outLine, backgroundColor, textCol
     );
 }
 
-export function RightIconButton({ width, backgroundColor, outLine, paddingVertical, paddingHorizontal, text, rightIcon, iconSize, textColor, onPress }: ButtonProps) {
+export function RightIconButton({ width, backgroundColor, outLine, paddingVertical, paddingHorizontal, text, rightIcon, iconSize, textColor, onPress, borderRadius }: ButtonProps) {
     return (
         <Pressable key='googleMapsButton'
             onPress={onPress}
@@ -59,14 +60,17 @@ export function RightIconButton({ width, backgroundColor, outLine, paddingVertic
                 borderWidth: outLine?.borderWidth,
                 borderColor: outLine?.borderColor,
                 paddingVertical: paddingVertical,
-                paddingHorizontal: paddingHorizontal
+                paddingHorizontal: paddingHorizontal,
+                borderRadius: borderRadius ? borderRadius : 100
             }
             ]}>
             <Text style={[rootTexts.text, { color: textColor ? textColor : undefined }]}>{text}</Text>
-            {rightIcon && (rightIcon in Ionicons.glyphMap) &&
-                <Ionicons name={rightIcon as keyof typeof Ionicons.glyphMap} size={iconSize} color={textColor ? textColor : rootColors.branco} />}
-            {rightIcon && (rightIcon in MaterialCommunityIcons.glyphMap) &&
-                <MaterialCommunityIcons name={rightIcon as keyof typeof MaterialCommunityIcons.glyphMap} size={iconSize} color={textColor ? textColor : rootColors.branco} />}
+            {
+                rightIcon && (rightIcon in Ionicons.glyphMap) ? (
+                    <Ionicons name={rightIcon as keyof typeof Ionicons.glyphMap} size={iconSize} color={textColor ? textColor : rootColors.branco} />) :
+                rightIcon && (rightIcon in MaterialCommunityIcons.glyphMap) &&
+                    <MaterialCommunityIcons name={rightIcon as keyof typeof MaterialCommunityIcons.glyphMap} size={iconSize} color={textColor ? textColor : rootColors.branco} />
+            }
         </Pressable>
     )
 }
