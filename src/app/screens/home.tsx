@@ -1,41 +1,26 @@
 import { MainHeader } from '@/src/components/header';
-import { rootColors, rootStyles } from '@/src/styles/styles';
+import { rootColors, rootStyles, rootTexts } from '@/src/styles/styles';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from 'expo-router';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import { EVENTOS_EXEMPLO } from '../data/eventos';
 
-const CATEGORIAS = [
-  { id: 1, nome: 'Cafés', icon: 'cafe' },
-  { id: 2, nome: 'Vinícolas', icon: 'wine' },
-  { id: 3, nome: 'Trilhas', icon: 'leaf' },
-  { id: 4, nome: 'Eventos', icon: 'calendar' },
-];
+import React from 'react';
+import { CATEGORIAS } from '../data/categories';
+import { LUGARES_POPULARES } from '../data/places';
 
-const LUGARES_POPULARES = [
-  {
-    id: 1,
-    nome: 'Igreja Matriz',
-    descricao: 'Igreja histórica do século XIX',
-    rating: 4.6,
-    imagem: require('@/assets/images/imagens-pinhal/portal-pinhal.jpg'),
-  },
-  {
-    id: 2,
-    nome: 'Fazenda Café Pinhal',
-    descricao: 'Tour pela plantação de café',
-    rating: 4.6,
-    imagem: require('@/assets/images/imagens-pinhal/fazenda-cafe.jpg'),
-  },
-];
+import { RightIconButton } from '@/src/components/buttons';
 
 export default function HomeScreen() {
   const opacity = useSharedValue(0);
+
+  const [selectedEventoId, setSelectedEventoId] = React.useState<number | null>(null);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -53,18 +38,94 @@ export default function HomeScreen() {
     }, [])
   );
 
+  function renderItemEvento(evento: any) {
+
+    const height = useSharedValue(0);
+
+    useEffect(() => {
+      height.value = withTiming(selectedEventoId === evento.id ? 150 : 0, { duration: 300 });
+    }, [selectedEventoId]);
+
+    var animatedHeight = useAnimatedStyle(() => {
+      return {
+        height: height.value,
+      };
+    });
+
+    return (
+      <Pressable key={evento.id} style={styles.eventoCard} onPress={setSelectedEventoId.bind(null, evento.id)}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={styles.eventoData}>
+            <Text style={styles.eventoDia}>{evento.dia}</Text>
+            <Text style={styles.eventoMes}>{evento.mes}</Text>
+          </View>
+
+          <Text style={styles.eventoTitulo}>{evento.titulo}</Text>
+
+          <View style={styles.eventoIcone}>
+            <Ionicons name={evento.icone} size={28} color={rootColors.verde} />
+          </View>
+        </View>
+
+        { selectedEventoId === evento.id &&
+          <Animated.View style={[{ overflow: 'hidden' }, animatedHeight]}>
+            <Text style={[rootTexts.text, { marginTop: 12, color: rootColors.marrom, opacity: 0.8 }]}>  {evento.descricao}</Text>
+            <View style={{ width: '100%', marginTop: 18, flexDirection: 'row', justifyContent: 'flex-start', gap: 12 }}>
+              <RightIconButton
+                text='Localização'
+                rightIcon='google-maps'
+                width={'auto'}
+                backgroundColor={rootColors.vinho}
+                textColor={rootColors.branco}
+                paddingHorizontal={16}
+                paddingVertical={8}
+                iconSize={20}
+                borderRadius={8}
+              />
+              <RightIconButton
+                text='Agendar'
+                rightIcon='calendar-check'
+                width={'auto'}
+                outLine={{ borderColor: rootColors.vinho, borderWidth: 2 }}
+                backgroundColor='#00000000'
+                textColor={rootColors.marrom}
+                paddingHorizontal={16}
+                paddingVertical={8}
+                iconSize={20}
+                borderRadius={8}
+              />
+              <RightIconButton
+                text='Fechar'
+                rightIcon='close'
+                width={'auto'}
+                outLine={{ borderColor: rootColors.vinho, borderWidth: 2 }}
+                backgroundColor='#00000000'
+                textColor={rootColors.marrom}
+                paddingHorizontal={16}
+                paddingVertical={8}
+                iconSize={20}
+                borderRadius={8}
+                onPress={function (){setSelectedEventoId(null)}}
+              />
+            </View>
+          </Animated.View>
+        }
+      </Pressable>
+    )
+  }
+
   return (
     <View style={rootStyles.container}>
       <MainHeader />
 
       {/* Content */}
-      <Animated.ScrollView 
+      <Animated.ScrollView
         style={[styles.conteudo, animatedStyle]}
         showsVerticalScrollIndicator={false}
       >
         {/* Banner Principal */}
         <View style={styles.containerBanner}>
-          <Image 
+          <Image
             source={require('@/assets/images/imagens-pinhal/portal-pinhal.jpg')}
             style={styles.imagemBanner}
           />
@@ -80,21 +141,21 @@ export default function HomeScreen() {
         {/* Categorias */}
         <View style={styles.secao}>
           <Text style={styles.tituloSecao}>Categorias</Text>
-          <ScrollView 
-            horizontal 
+          <ScrollView
+            horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.containerCategorias}
           >
             {CATEGORIAS.map((categoria) => (
               <Pressable key={categoria.id} style={styles.cardCategoria}>
                 <View style={styles.iconeCategoria}>
-                  <Ionicons 
-                    name={categoria.icon as any} 
-                    size={32} 
-                    color={rootColors.marrom} 
+                  <Ionicons
+                    name={categoria.icon as any}
+                    size={32}
+                    color={rootColors.marrom}
                   />
                 </View>
-                <Text style={styles.textoCategoria}>{categoria.nome}</Text>
+                <Text style={styles.textoCategoria}>{categoria.name}</Text>
               </Pressable>
             ))}
           </ScrollView>
@@ -103,14 +164,14 @@ export default function HomeScreen() {
         {/* Lugares Populares */}
         <View style={styles.secao}>
           <Text style={styles.tituloSecao}>Lugares Populares</Text>
-          <ScrollView 
-            horizontal 
+          <ScrollView
+            horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.containerLugares}
           >
             {LUGARES_POPULARES.map((lugar) => (
               <Pressable key={lugar.id} style={styles.cardLugar}>
-                <Image 
+                <Image
                   source={typeof lugar.imagem === 'string' ? { uri: lugar.imagem } : lugar.imagem}
                   style={styles.imagemLugar}
                 />
@@ -128,6 +189,15 @@ export default function HomeScreen() {
               </Pressable>
             ))}
           </ScrollView>
+        </View>
+
+        <View style={[styles.secao, { marginBottom: 150 }]}>
+          <Text style={styles.tituloSecao}>Próximos Eventos</Text>
+          <View style={styles.containerEventos}>
+            {EVENTOS_EXEMPLO.map((evento, index) => (
+              renderItemEvento(evento)
+            ))}
+          </View>
         </View>
       </Animated.ScrollView>
     </View>
@@ -231,7 +301,6 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     paddingRight: 16,
     paddingBottom: 16,
-    marginBottom: 25,
   },
   cardLugar: {
     backgroundColor: rootColors.branco,
@@ -282,5 +351,51 @@ const styles = StyleSheet.create({
     color: rootColors.marrom,
     marginLeft: 4,
     fontWeight: '600',
+  },
+  containerEventos: {
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingBottom: 16,
+  },
+  eventoCard: {
+    backgroundColor: rootColors.branco,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 12,
+    flexDirection: 'column',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  eventoData: {
+    backgroundColor: rootColors.vinho,
+    borderRadius: 12,
+    width: 60,
+    height: 60,
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  eventoDia: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: rootColors.branco,
+  },
+  eventoMes: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: rootColors.branco,
+  },
+  eventoTitulo: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '600',
+    color: rootColors.marrom,
+  },
+  eventoIcone: {
+    marginLeft: 8,
   },
 });
