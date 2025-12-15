@@ -9,18 +9,12 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-
-// Dados de exemplo dos eventos
-const EVENTOS_EXEMPLO = [
-  { id: 1, dia: 10, mes: 'NOV', titulo: 'Festa do Café', icone: 'cafe' },
-  { id: 2, dia: 10, mes: 'NOV', titulo: 'Festa do Café', icone: 'cafe' },
-  { id: 3, dia: 10, mes: 'NOV', titulo: 'Festa do Café', icone: 'cafe' },
-];
+import { EVENTOS_EXEMPLO } from '../data/eventos';
 
 export default function EventosScreen() {
   const opacity = useSharedValue(0);
   const [mesAtual, setMesAtual] = useState(new Date());
-  const [dataSelecionada, setDataSelecionada] = useState<number | null>(24);
+  const [dataSelecionada, setDataSelecionada] = useState<number | null>(null);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -130,7 +124,7 @@ export default function EventosScreen() {
           {/* Grade do calendário */}
           <View style={styles.gradeCalendario}>
             {diasCalendario.map((item, index) => {
-              const isDiaAtual = item.dia === 24 && item.mesAtual;
+              const isDiaAtual = item.dia === mesAtual.getDate() && item.mesAtual;
               const isSelecionado = item.dia === dataSelecionada && item.mesAtual;
               
               return (
@@ -172,7 +166,7 @@ export default function EventosScreen() {
               <Text style={styles.eventoTitulo}>{evento.titulo}</Text>
               
               <View style={styles.eventoIcone}>
-                <Ionicons name="cafe" size={28} color={rootColors.verde} />
+                <Ionicons name={evento.icone} size={28} color={rootColors.verde} />
               </View>
             </Pressable>
           ))}

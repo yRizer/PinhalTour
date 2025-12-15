@@ -37,6 +37,7 @@ type SheetProps = {
             data: string,
         }[],
     };
+    content?: any;
 }
 
 export function SheetDown(
@@ -114,7 +115,8 @@ export function SheetUp(
         description,
         floatingButton,
         mapsData = undefined,
-        toClose = false
+        toClose = false,
+        content = undefined,
 
     }: SheetProps
 ) {
@@ -185,6 +187,42 @@ export function SheetUp(
 
     function marcarNoCalendario() {
         console.log('Marcar no calendário');
+    }
+
+    function assembleContent(content: any) {
+        const validContentTypes = ['text', 'image', 'title', 'subtitle'];
+        const contentComponents = content.map((item: any, index: number) => {
+            if (validContentTypes.includes(item.type)) {
+                switch (item.type) {
+                    case 'text':
+                        return (
+                            <Text key={index} style={rootTexts.text}>{item.value}</Text>
+                        );
+                    case 'image':
+                        return (
+                            <Image key={index} source={{ uri: item.value }} style={{ width: '100%', height: 200, borderRadius: 15 }} />
+                        );
+                    case 'title':
+                        return (
+                            <Text key={index} style={[rootTexts.title, { marginBottom: 10 }]}>{item.value}</Text>
+                        );
+                    case 'subtitle':
+                        return (
+                            <Text key={index} style={rootTexts.subtitle}>{item.value}</Text>
+                        );
+                    default:
+                        return null;
+                }
+            } else {
+                console.warn(`Tipo de conteúdo inválido: ${item.type}`);
+                return null;
+            }
+        })
+
+        return (<ScrollView contentContainerStyle={styles.contentContainer}>
+            {contentComponents}
+        </ScrollView>
+        );
     }
 
     function selectedMapsData({ mapsData = undefined }: SheetProps) {
@@ -312,6 +350,9 @@ export function SheetUp(
                     {description && (<Text style={styles.textDescription}>{description}</Text>)}
                     {mapsData &&
                         selectedMapsData({ mapsData })
+                    }
+                    {content &&
+                        assembleContent(content)
                     }
                 </Animated.View>
             </GestureDetector >

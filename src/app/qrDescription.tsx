@@ -9,13 +9,13 @@ import { StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-n
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { rootColors } from '../styles/styles';
-import { useQRData } from './hooks/useApi';
+import { CONTENT_DATA } from './data/qrDescription';
 
 
 
 export default function QRDescriptionScreen() {
     const { QRCode } = useLocalSearchParams();
-    const { data: response, loading, error } = useQRData(QRCode);
+    // const { data: response, loading, error } = useQRData(QRCode);
     const { width: windowWidth } = useWindowDimensions();
     const [images, setImages] = useState<any[] | undefined>(undefined);
 
@@ -44,9 +44,7 @@ export default function QRDescriptionScreen() {
         // Example usage:
         getRandomUnsplashImages().then(imageUrls => {
             if (imageUrls && Array.isArray(imageUrls)) {
-                // console.log("Random Unsplash Image URLs:", imageUrls);
                 setImages(imageUrls);
-                console.log(images);
             }
         });
     }, []);
@@ -55,9 +53,9 @@ export default function QRDescriptionScreen() {
 
     let colection: any = null;
 
-    if (response?.status === 'success' && response.data) {
-        [colection] = response.data;
-    }
+    // if (response?.status === 'success' && response.data) {
+    //     [colection] = response.data;
+    // }
 
     const renderFloatingButton = () => (
         <TouchableOpacity
@@ -75,7 +73,7 @@ export default function QRDescriptionScreen() {
 
     return (
         <View style={{ flex: 1 }}>
-            <DefaultHeader title={'igreja'} backTo={()=>{router.dismissTo('/screens/qr code')}}/>
+            <DefaultHeader title={'Igreja'} backTo={()=>{router.dismissTo('/screens/qr code')}}/>
             <SafeAreaProvider>
                 <SafeAreaView style={[styles.container]} edges={['top']}>
                     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -85,7 +83,7 @@ export default function QRDescriptionScreen() {
 
                         {/* {response?.status === 'error' && !loading && renderInvalidQRCode()} */}
 
-                        {colection && !loading && (
+                        {/* {colection && !loading && (
                             <>
                                 <View style={{ position: "relative", backgroundColor: '#FFFFFF', flex: 1 }}>
                                     <View style={{ position: "relative" }}>
@@ -105,7 +103,7 @@ export default function QRDescriptionScreen() {
                                     />
                                 </View>
                             </>
-                        )}
+                        )} */}
                         {images && (
                             <View style={{ position: "relative", backgroundColor: '#FFFFFF', flex: 1 }}>
                                 <View style={{ position: "relative" }}>
@@ -119,8 +117,9 @@ export default function QRDescriptionScreen() {
                                     SetPosY={58}
                                     Percentage={true}
                                     Close={false}
-                                    description={'teste'}
+                                    // description={'teste'}
                                     floatingButton={renderFloatingButton()}
+                                    content={CONTENT_DATA}
                                 />
                             </View>
                         )}
