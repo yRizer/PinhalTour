@@ -1,6 +1,6 @@
 # PinhalTour
 
-Aplicativo de turismo de Espírito Santo do Pinhal (SP): rotas, eventos e pontos turísticos da cidade na palma da mão, com leitura de QR codes nos locais históricos. Projeto de 2025, feito em trio com Gabriel e Nicolas, com um painel web para a administração acompanhar as visitas.
+Aplicativo de turismo de Espírito Santo do Pinhal (SP): rotas, eventos e pontos turísticos da cidade na palma da mão, com leitura de QR codes nos locais históricos. Projeto de 2025, feito em trio com Gabriel e Nicolas.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/yRizer/Portifolio/main/public/images/pinhaltour/inicio.webp" width="180" alt="Tela inicial com rotas, categorias e eventos" />
