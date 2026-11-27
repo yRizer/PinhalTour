@@ -22,13 +22,19 @@ Aplicativo de turismo de Espírito Santo do Pinhal (SP): rotas, eventos e pontos
 - React Native 0.81 com Expo 54 e Expo Router (navegação por abas com tab bar própria)
 - TypeScript
 - expo-camera para leitura de QR codes
-- API em Node.js hospedada no Railway
+- API em Node.js + MySQL compartilhada com o app da Vinícola ([yRizer/TestesTccVinicola](https://github.com/yRizer/TestesTccVinicola))
 
 ## Como rodar
 
 ```bash
 npm install
 npx expo start
+```
+
+Para usar a API (QR codes), suba o [TestesTccVinicola](https://github.com/yRizer/TestesTccVinicola) com `docker compose up -d` e crie um `.env` a partir do `.env.example`, com o IP do seu computador:
+
+```env
+EXPO_PUBLIC_API_URL=http://192.168.0.10:3333
 ```
 
 Abra no Expo Go (Android ou iOS) lendo o QR code do terminal, ou pressione `w` para a versão web.
