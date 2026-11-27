@@ -1,4 +1,6 @@
-const BASE_URL = 'https://backend-tcc-production-9d24.up.railway.app';
+// Endereço da API vem do .env (EXPO_PUBLIC_API_URL). É a mesma API da Vinícola (yRizer/TestesTccVinicola).
+// No celular, use o IP do computador na rede, por exemplo http://192.168.0.10:3333.
+const BASE_URL = (process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3333').replace(/\/$/, '');
 
 class ApiService {
   private baseURL: string;
@@ -19,7 +21,7 @@ class ApiService {
     };
 
     try {
-      console.log(`Conectando ao Railway: ${url}`);
+      console.log(`Conectando à API: ${url}`);
       
       const timeoutPromise = new Promise<never>((_, reject) => {
         setTimeout(() => reject(new Error('Timeout da requisição')), 15000);
@@ -29,16 +31,18 @@ class ApiService {
       const response = await Promise.race([fetchPromise, timeoutPromise]);
       
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // A API manda { status: 'error', message } nos erros; repassa essa mensagem
+        const body = await response.json().catch(() => null);
+        throw new Error(body?.message || `Erro ${response.status} ao falar com a API`);
       }
       
       const data = await response.json();
-      console.log('✓ Conexão bem-sucedida com Railway');
+      console.log('✓ Conexão bem-sucedida com a API');
       console.log('Resposta da API:', data);
       
       return data;
     } catch (error) {
-      console.error(`✗ Erro ao conectar no Railway:`, error);
+      console.error(`✗ Erro ao conectar na API:`, error);
       throw error instanceof Error ? error : new Error('Falha na conexão com o servidor');
     }
   }
